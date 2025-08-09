@@ -9,13 +9,19 @@
         .flash.error { background-color: #ffcdd2; color: #c62828; border: 1px solid #c62828; }
     </style>
 </head>
-<body>
+<body class="con-video">
+    <!-- Video de fondo (misma ruta que uses en login) -->
+    <div class="fondo-video">
+        <video id="video-fondo" autoplay muted loop playsinline>
+            <source src="{{ url_for('static', filename='video/hojas.mp4') }}" type="video/mp4">
+        </video>
+    </div>
+
     <header>
         <h1>Registro de Usuario</h1>
     </header>
 
     <main>
-        <!-- Para mostrar el mensaje de error si el usuario ya existe -->
         {% if error %}
             <div class="flash error">{{ error }}</div>
         {% endif %}

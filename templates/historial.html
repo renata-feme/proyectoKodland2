@@ -5,7 +5,7 @@
     <title>Historial de Huella de Carbono</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-     
+        /* Estilo para el ranking original */
         .historial-container {
             display: flex;
             flex-direction: column;
@@ -35,7 +35,6 @@
             font-weight: bold;
             color: #388e3c;
         }
-        /* Estilos para la sección desplegable de detalles */
         details {
             margin-top: 1em;
         }
@@ -54,6 +53,19 @@
         details li {
             margin-bottom: 0.5em;
         }
+        /* Estilo para cuando el historial está vacío */
+        .empty-historial-card {
+            background-color: #ffffff;
+            padding: 3em;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .empty-historial-card p {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 1.5em;
+        }
     </style>
 </head>
 <body>
@@ -63,10 +75,10 @@
 
     <main>
         <h2>Ranking de tu Huella de Carbono</h2>
-        <p>Aquí puedes ver tus resultados, ordenados del mes con menor impacto (mejor) al de mayor impacto (peor).</p>
         
-        <div class="historial-container">
-            {% if consumos %}
+        {% if consumos %}
+            <p>Aquí puedes ver tus resultados, ordenados del mes con menor impacto (mejor) al de mayor impacto (peor).</p>
+            <div class="historial-container">
                 {% for consumo in consumos %}
                     <div class="historial-item">
                         <h3>Registro del: {{ consumo.fecha_creacion.strftime('%d de %B de %Y') }}</h3>
@@ -74,7 +86,6 @@
                         <details>
                             <summary>Ver detalles completos de este mes</summary>
                             <ul>
-                            
                                 <li>💧 Consumo de Agua: <b>{{ consumo.agua }} L</b></li>
                                 <li>⚡ Consumo de Electricidad: <b>{{ consumo.luz }} kWh</b></li>
                                 <li>⛽ Consumo de Gasolina: <b>{{ consumo.gasolina }} L</b></li>
@@ -93,14 +104,17 @@
                         </details>
                     </div>
                 {% endfor %}
-            {% else %}
-                <p>Aún no has completado ningún cuestionario. ¡Anímate a calcular tu primera huella de carbono!</p>
-            {% endif %}
-        </div>
-
-        <div style="margin-top: 2em; text-align: center;">
-            <a class="menu-boton" href="{{ url_for('menu', id_usuario=usuario.id) }}">Volver al Menú</a>
-        </div>
+            </div>
+            <div style="margin-top: 2em; text-align: center;">
+                <a class="menu-boton" href="{{ url_for('menu', id_usuario=usuario.id) }}">Volver al Menú</a>
+            </div>
+        {% else %}
+            <!-- Esta es la vista mejorada para cuando no hay nada -->
+            <div class="empty-historial-card">
+                <p>Aún no has calculado tu huella de carbono.<br>¡Anímate a responder el cuestionario para empezar tu historial!</p>
+                <a class="menu-boton" href="{{ url_for('iniciar_cuestionario', id_usuario=usuario.id) }}">🌱 Calcular mi Primera Huella</a>
+            </div>
+        {% endif %}
     </main>
 </body>
 </html>

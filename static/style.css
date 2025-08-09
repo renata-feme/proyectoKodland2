@@ -1,11 +1,11 @@
+/* Animación de brillo en texto */
 @keyframes glowText {
-    0% { text-shadow: 0 0 10px #C4DAC5, 0 0 20px #81c784, 0 0 30px #66bb6a; }
-    100% { text-shadow: 0 0 20px #C4DAC5, 0 0 40px #a5d6a7, 0 0 60px #66bb6a; }
+    0% { text-shadow: 0 0 10px #0b3d0b, 0 0 20px #1d5e1d, 0 0 30px #2f7f2f; }
+    100% { text-shadow: 0 0 20px #0b3d0b, 0 0 40px #1d5e1d, 0 0 60px #2f7f2f; }
 }
 
-/* static/style.css */
-
-/*body {
+/* General */
+body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
@@ -14,36 +14,30 @@
     transition: background 0.5s ease;
     overflow-x: hidden;
     overflow-y: auto;
-} */
+}
 
+/* Fondo de video solo en login */
 .fondo-video {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     z-index: -1;
-    background-color: black;
+    background: transparent;
 }
-
 #video-fondo {
     width: 100%;
     height: 100%;
-    object-fit: fill;
+    object-fit: cover;
     filter: brightness(0.8);
     pointer-events: none;
-    animation: slowZoom 900s linear infinite;
 }
 
-@keyframes slowZoom {
-    0% { transform: scale(1); }
-    100% { transform: scale(1); } /* sin zoom */
-}
-
-/*header {
-    background-color: #43a047;
-    color: #;
+/* Encabezado */
+header {
+    background-color: rgba(68, 193, 74, 0.925);
     padding: 1.5em;
     text-align: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
@@ -51,16 +45,17 @@
     background-repeat: no-repeat;
     background-position: right 1em center;
     background-size: 48px;
-}*/
-
+}
 h1 {
     color: #FBFDFB;
     animation: glowText 2s ease-in-out infinite alternate;
-    text-shadow: 0 0 10px #ffffff, 0 0 20px #81c784, 0 0 30px #66bb6a;
+    text-shadow: 0 0 10px #0b3d0b, 0 0 20px #1d5e1d, 0 0 30px #2f7f2f;
 }
 
+/* Cuerpo principal (tarjeta base) */
+/* ▶️ Cambio: ancho mayor para que entren 3 botones en una hilera */
 main {
-    max-width: 800px;
+    max-width: 1100px;          /* antes: 800px */
     margin: 2em auto;
     background: rgba(255, 255, 255, 0.9);
     padding: 2em;
@@ -70,30 +65,124 @@ main {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     backdrop-filter: blur(3px);
 }
-
 main:hover {
     transform: translateY(-5px);
     box-shadow: 0 0 40px rgba(76, 175, 80, 0.6);
 }
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
 @keyframes slideIn {
     from { transform: translateX(-30px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
 
+/* ----------------------------- */
+/* PANEL DE ACCIONES (MENÚ)      */
+/* ----------------------------- */
+
+/* Texto antes del panel */
+main > p:first-of-type {
+    text-align: center;
+    font-size: clamp(1.4rem, 2.6vw, 2rem);
+    font-weight: 800;
+    color: #246B2A;
+    margin: 0 0 0.8em 0;
+    letter-spacing: 0.2px;
+}
+
+/* Tarjeta del panel */
+/* ▶️ Cambio: no permitir salto de línea */
+.menu-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;     /* antes: wrap */
+    gap: 1.2em;
+    padding: 1.8em 2em;
+    margin: 0 auto 2em auto;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(241,248,233,0.95));
+    border: 1px solid rgba(102,187,106,0.35);
+    box-shadow:
+        0 10px 25px rgba(34,139,34,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+    position: relative;
+}
+
+/* Animación brillo suave */
+@keyframes softGlow {
+    0%   { box-shadow: 0 10px 25px rgba(34,139,34,0.18), inset 0 1px 0 rgba(255,255,255,0.6); }
+    100% { box-shadow: 0 12px 32px rgba(34,139,34,0.28), inset 0 1px 0 rgba(255,255,255,0.7); }
+}
+.menu-grid:hover {
+    animation: softGlow 1.4s ease-in-out alternate infinite;
+}
+
+/* Botones */
+/* ▶️ Cambio: ancho controlado para que quepan 3 */
+.menu-boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6em;
+    width: clamp(200px, 30%, 320px);  /* ancho flexible y limitado */
+    padding: 0.9em 1.2em;             /* un pelín más compacto */
+    border-radius: 12px;
+    background: linear-gradient(135deg, #43a047, #2e7d32);
+    color: #fff;
+    font-weight: 800;
+    font-size: clamp(0.95rem, 1.6vw, 1.1rem);  /* texto ligeramente más pequeño */
+    text-decoration: none;
+    border: 2px solid transparent;
+    box-shadow: 0 6px 16px rgba(46,125,50,0.35);
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease, filter 180ms ease;
+    will-change: transform, box-shadow;
+    position: relative;
+}
+
+/* Brillo respirando */
+@keyframes glowButton {
+    0% { box-shadow: 0 0 10px rgba(76,175,80,0.35), 0 0 22px rgba(129,199,132,0.25); }
+    100% { box-shadow: 0 0 18px rgba(129,199,132,0.45), 0 0 36px rgba(165,214,167,0.35); }
+}
+.menu-boton {
+    animation: glowButton 2.2s ease-in-out infinite alternate;
+}
+
+/* Interacciones */
+.menu-boton:hover {
+    transform: translateY(-3px) scale(1.03);
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    box-shadow: 0 10px 24px rgba(46,125,50,0.45), 0 0 18px rgba(129,199,132,0.4);
+    border-color: rgba(200,230,201,0.8);
+}
+.menu-boton:active {
+    transform: translateY(0) scale(0.98);
+    filter: brightness(0.98);
+}
+.menu-boton:focus-visible {
+    outline: none;
+    border-color: #A5D6A7;
+    box-shadow: 0 0 0 3px rgba(165,214,167,0.7), 0 8px 20px rgba(46,125,50,0.35);
+}
+.menu-boton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.35), transparent 60%);
+    opacity: 0;
+    transition: opacity 200ms ease;
+}
+.menu-boton:hover::after {
+    opacity: 0.3;
+}
+
+/* Formularios */
 label {
     display: block;
     margin: 1em 0 0.5em;
     font-weight: bold;
 }
-
 input, select {
-    width: 100%;
+    width: 50%;
     padding: 0.7em;
     margin-bottom: 1em;
     border: 1px solid #a5d6a7;
@@ -101,13 +190,11 @@ input, select {
     background-color: #f1f8e9;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-
 input:focus, select:focus {
     border-color: #66bb6a;
     outline: none;
     box-shadow: 0 0 15px #81c784;
 }
-
 button, input[type="submit"] {
     background-color: #388e3c;
     color: white;
@@ -118,40 +205,36 @@ button, input[type="submit"] {
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 button:hover, input[type="submit"]:hover {
     background-color: #2e7d32;
     transform: scale(1.07);
     box-shadow: 0 0 20px #81c784;
 }
 
+/* Links */
 a {
     color: #1b5e20;
     text-decoration: none;
     font-weight: bold;
 }
-
 a:hover {
     text-decoration: underline;
     color: #388e3c;
 }
 
+/* Lista */
 ul {
     padding-left: 1.5em;
     list-style: square;
     color: #388e3c;
 }
 
-body:hover {
-    background: #f1f8e9;
-}
-
+/* Opciones reciclaje */
 input[type="radio"] {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
-
 .opciones-reciclaje {
     display: flex;
     flex-direction: column;
@@ -159,7 +242,6 @@ input[type="radio"] {
     margin-top: 1.5em;
     padding-left: 0.5em;
 }
-
 .opcion-reciclaje {
     background-color: #f1f8e9;
     border: 2px solid #c8e6c9;
@@ -168,19 +250,343 @@ input[type="radio"] {
     font-weight: bold;
     color: #2e7d32;
     cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s, border-color 0.2s;
     text-align: left;
     font-size: 1.1em;
 }
-
 .opcion-reciclaje:hover {
     background-color: #dcedc8;
     transform: scale(1.02);
 }
-
 .opcion-reciclaje.selected {
     background-color: #a5d6a7;
     border-color: #66bb6a;
     color: #1b5e20;
     box-shadow: 0 0 15px #81c784;
+}
+input[type="checkbox"]:checked + label,
+input[type="radio"]:checked + label {
+    background-color: rgba(144, 238, 144, 0.6);
+    border-color: #4CAF50;
+}
+
+/* ========================================= */
+/* REGISTRO (sin video) – solo este ajuste   */
+/* ========================================= */
+
+/* Contenedor del form centrado y con ancho cómodo */
+main form {
+  max-width: 560px;
+  margin: 0 auto 0.8rem auto;
+}
+
+/* Inputs del registro a 100% del ancho útil */
+main form input,
+main form select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* El “¿Ya tienes cuenta? Inicia sesión” pequeño y centrado,
+   sin salirse del recuadro */
+main form + p {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #246B2A;
+  margin: 0.75rem auto 0;
+  max-width: 560px;   /* para que quede alineado con el form */
+  line-height: 1.25;
+}
+
+/* ===== Login bonito (sin cambiar HTML) ===== */
+
+/* El área del login usa el video de fondo (.fondo-video). 
+   Aquí centramos y convertimos el form en una "tarjeta". */
+.fondo-video ~ main {
+  max-width: 760px;          /* no afecta otras páginas */
+  margin: 2.5rem auto;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  position: relative;        /* referencia para posicionar el <p> */
+}
+
+/* Tarjeta del formulario */
+.fondo-video ~ main form {
+  max-width: 560px;
+  margin: 0 auto;
+  background: rgba(255,255,255,.96);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  padding: 28px 28px 88px;   /* espacio abajo para el texto de registro */
+}
+
+/* Etiquetas y campos */
+.fondo-video ~ main form label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 800;
+  color: #2e7d32;
+}
+.fondo-video ~ main form input[type="text"],
+.fondo-video ~ main form input[type="password"],
+.fondo-video ~ main form input[type="email"],
+.fondo-video ~ main form select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #a5d6a7;
+  border-radius: 10px;
+  background: #eef6ff;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+  transition: border-color .2s, box-shadow .2s;
+}
+.fondo-video ~ main form input:focus,
+.fondo-video ~ main form select:focus {
+  outline: none;
+  border-color: #66bb6a;
+  box-shadow: 0 0 0 3px rgba(102,187,106,.18);
+}
+
+/* Botón full-width, centrado */
+.fondo-video ~ main form input[type="submit"],
+.fondo-video ~ main form button[type="submit"] {
+  width: 100%;
+  height: 52px;
+  margin-top: 18px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #43a047, #2e7d32);
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(46,125,50,.28);
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+.fondo-video ~ main form input[type="submit"]:hover,
+.fondo-video ~ main form button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px rgba(46,125,50,.34);
+  filter: brightness(.98);
+}
+
+/* El “¿No tienes cuenta?…” centrado dentro de la tarjeta */
+.fondo-video ~ main form + p {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  margin: 0;
+  width: auto;
+  text-align: center;
+  color: #246B2A;
+  font-size: 1rem;
+}
+.fondo-video ~ main form + p a {
+  font-weight: 900;
+  text-decoration: underline;
+  color: #246B2A;
+}
+
+/* Responsive: un poco más compacto en móviles */
+@media (max-width: 600px) {
+  .fondo-video ~ main { max-width: 92vw; }
+  .fondo-video ~ main form { padding: 22px 18px 82px; }
+  .fondo-video ~ main form input[type="submit"] { height: 48px; }
+  .fondo-video ~ main form + p { bottom: 18px; font-size: .96rem; }
+}
+
+/* Evita que los inputs “sumen” el borde al ancho */
+.fondo-video ~ main form input[type="text"],
+.fondo-video ~ main form input[type="password"],
+.fondo-video ~ main form input[type="email"],
+.fondo-video ~ main form select {
+  width: 100%;
+  box-sizing: border-box;   /* ← clave */
+}
+
+/* Por si algún pixel quiere asomarse, lo recortamos por el radio */
+.fondo-video ~ main form {
+  overflow: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container p {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #1b5e20;
+    font-weight: 600;
+    width: 100%;
+}
+
+/* ===== Registro: centra y reduce "¿Ya tienes cuenta? Inicia sesión" ===== */
+/* Cubre el caso en que el <p> esté después del <form> (hermano general)   */
+main form ~ p {
+  /* centra */
+  width: fit-content;
+  margin: 1rem auto 0 !important;
+  text-align: center !important;
+
+  /* tamaño ligeramente menor y consistente */
+  font-size: clamp(1rem, 1.2vw, 1.15rem) !important;
+  font-weight: 800;
+  color: #246B2A;
+  line-height: 1.3;
+
+  /* opcional: no dejes que se extienda más que el form */
+  max-width: 560px;
+}
+
+/* Por si en tu plantilla ese <p> es el último dentro de <main>,
+   este refuerzo mantiene el centrado sin afectar otras páginas */
+main > p:last-of-type {
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#mensajeError,
+.error,
+.alert,
+.alerta,
+.msg-error {
+  display: block;
+  max-width: 560px;
+  width: calc(100% - 32px);
+  margin: 16px auto -8px;
+  padding: 1px 1x;
+  border-radius: 12px;
+  background: #ffe2e2;
+  border: 2px solid #e57373;
+  color: #b00020;
+  text-align: center;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(176, 0, 32, .16);
+  position: relative;
+  z-index: 3;
+}
+
+@media (max-width: 600px) {
+  .fondo-video + *:not(main),
+  #mensajeError, .error, .alert, .alerta, .msg-error {
+    width: calc(100% - 20px);
+    margin: 12px auto -6px;
+    padding: 12px 14px;
+    font-size: .98rem;
+  }
+}
+
+/* Aviso de éxito (registro completado) */
+#mensajeOk,
+.success,
+.ok,
+.alert-success,
+.exito,
+.msg-success {
+  display: block;
+  max-width: 460px;
+  width: calc(100% - 32px);
+  margin: 16px auto -8px;
+  padding: 1px 1px;           /* deja esto igual para que coincida con el otro */
+  border-radius: 20px;
+  background: #e9f7ef;        /* verde muy claro */
+  border: 2px solid #66bb6a;  /* borde verde */
+  color: #1b5e20;             /* texto verde oscuro */
+  text-align: center;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(46, 125, 50, .16);
+  position: relative;
+  z-index: 3;
+}
+
+
+/* Mismo estilo/tamaño que los otros dos */
+#mensajeError,
+.error,
+.alert,
+.alerta,
+.msg-error,
+.alert-danger {           /* 👈 agrégalo aquí */
+  display: block;
+  max-width: 560px;
+  width: calc(100% - 32px);
+  margin: 16px auto -8px;
+  padding: 0.1px 0.1px;
+  border-radius: 60px;
+  background: #ffe2e2;
+  border: 2px solid #e57373;
+  color: #b00020;
+  text-align: center;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(176, 0, 32, .16);
+  position: relative;
+  z-index: 3;
+}
+
+/* Video de fondo */
+.fondo-video {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+#video-fondo {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  filter: brightness(0.82);
+}
+
+/* Cuando hay video, el main se vuelve “transparente” (igual que en login) */
+.con-video main {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Alternativa por estructura: si .fondo-video es hermano de main */
+.fondo-video ~ main {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ==== VIDEO DE FONDO (registro) – ARREGLOS FINALES ==== */
+.fondo-video {
+  position: fixed;
+  inset: 0;
+  z-index: 0;              /* antes -1: puede quedar debajo del fondo del body */
+  overflow: hidden;
+  pointer-events: none;
+}
+#video-fondo {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  filter: brightness(0.82);
+}
+
+/* Asegura que el contenido quede por encima del video */
+header, main {
+  position: relative;
+  z-index: 1;
+}
+
+/* El main debe ser transparente cuando haya video detrás */
+.fondo-video ~ main {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Si usaste body.con-video, también lo soportamos */
+body.con-video main {
+  background: transparent !important;
+  box-shadow: none !important;
 }

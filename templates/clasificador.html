@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>Clasificador de Residuos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Librerías para que Teachable Machine funcione en la web -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
     <style>
         .classifier-container {
             display: flex;
@@ -11,25 +14,34 @@
             align-items: center;
             gap: 1.5em;
         }
-        .result-container {
-            display: flex;
-            gap: 2em;
-            align-items: center;
-            margin-top: 2em;
-            background-color: #f1f8e9;
-            padding: 2em;
+        #image-preview {
+            max-width: 80%;
+            max-height: 400px;
+            border: 3px dashed #c8e6c9;
             border-radius: 10px;
-            width: 100%;
-            max-width: 600px;
+            padding: 1em;
+            display: none; /* Se oculta hasta que cargas una imagen */
         }
-        .result-image {
-            max-width: 250px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .result-text h3 {
-            margin-top: 0;
+        #label-container {
+            margin-top: 1em;
+            font-size: 1.5em;
+            font-weight: bold;
             color: #2e7d32;
+            text-align: center;
+        }
+        .file-input-label {
+            background-color: #388e3c;
+            color: white;
+            padding: 0.8em 1.5em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .file-input-label:hover {
+            background-color: #2e7d32;
+        }
+        #image-upload {
+            display: none; 
         }
     </style>
 </head>
@@ -41,27 +53,72 @@
     <main class="classifier-container">
         <p>Sube una imagen de un residuo para saber cómo separarlo correctamente.</p>
         
-        <!-- Formulario para subir la imagen -->
-        <form method="post" enctype="multipart/form-data">
-            <input type="file" name="image" accept="image/*" required>
-            <button type="submit" class="menu-boton">Clasificar</button>
-        </form>
+        <label for="image-upload" class="file-input-label">📸 Seleccionar Imagen</label>
+        <input type="file" id="image-upload" accept="image/*" onchange="previewImage(event)">
 
-        <!-- Sección para mostrar el resultado -->
-        {% if prediction %}
-        <div class="result-container">
-            <img src="{{ url_for('static', filename='../uploads/' + prediction.image_path) }}" alt="Imagen subida" class="result-image">
-            <div class="result-text">
-                <h3>Resultado del Análisis:</h3>
-                <p style="font-size: 1.5em;">Clase: <b>{{ prediction.class_name }}</b></p>
-                <p>Confianza: <b>{{ prediction.confidence }}</b></p>
-            </div>
-        </div>
-        {% endif %}
+        <img id="image-preview" src="#" alt="Vista previa de la imagen">
+
+        <div id="label-container"></div>
 
         <div style="margin-top: 2em;">
             <a class="menu-boton" href="{{ url_for('menu', id_usuario=usuario.id) }}">🏠 Volver al Menú</a>
         </div>
     </main>
+
+    <script type="text/javascript">
+        const URL = "https://teachablemachine.withgoogle.com/models/vKSI42H9a/";
+
+        let model, labelContainer, maxPredictions;
+
+        // Carga el modelo y prepara la página
+        async function init() {
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+            
+            labelContainer = document.getElementById("label-container");
+            // CORRECCIÓN: Mostramos que el modelo se está cargando
+            labelContainer.innerHTML = "Cargando modelo...";
+
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
+            
+            // CORRECCIÓN: Avisamos que el modelo ya está listo
+            labelContainer.innerHTML = "¡Modelo cargado!\n Sube una imagen.";
+            
+        }
+
+        // Muestra la imagen que el usuario seleccionó
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const output = document.getElementById('image-preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+                predict(); 
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        // Analiza la imagen con el modelo
+        async function predict() {
+            if (!model) await init();
+            
+            labelContainer.innerHTML = "Analizando...";
+            const image = document.getElementById('image-preview');
+            const prediction = await model.predict(image, false);
+            
+            prediction.sort((a, b) => b.probability - a.probability);
+
+            const bestPrediction = prediction[0];
+            const className = bestPrediction.className;
+            const probability = Math.round(bestPrediction.probability * 100);
+
+            const resultHTML = `TIPO: <b>${className}</b> (${probability}%)`;
+            labelContainer.innerHTML = resultHTML;
+        }
+        
+        // Inicia el modelo en cuanto la página carga
+        init();
+    </script>
 </body>
 </html>
