@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultado de tu Huella</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .resultado-eco { text-align: center; }
+        .resultado-puntaje {
+            font-size: 4em;
+            font-weight: bold;
+            color: #388e3c;
+            margin: 0.2em 0;
+        }
+        .mensaje-personalizado {
+            background-color: #f1f8e9;
+            border: 2px solid #c8e6c9;
+            border-radius: 10px;
+            padding: 1.5em;
+            margin: 2em 0;
+            text-align: center;
+        }
+        .mensaje-personalizado h3 {
+            margin-top: 0;
+            color: #2e7d32;
+            font-size: 1.5em;
+        }
+        .botones-navegacion {
+            display: flex;
+            justify-content: center;
+            gap: 1em;
+            margin-top: 2em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Resultado de tu Huella Ecológica</h1>
+    </header>
+
+    <main class="resultado-eco">
+        <!-- Mostramos el nombre del usuario -->
+        <p>🌱 ¡Hola, <b>{{ usuario.nombre }}</b>! 🌱</p>
+            
+        <p>Tu huella de carbono para este registro es:</p>
+        <h2 class="resultado-puntaje">{{ consumo.puntaje }}</h2>
+        <p>kg de CO₂ equivalente por mes.</p>
+
+        <div class="mensaje-personalizado">
+            <h3>{{ mensaje_titulo }}</h3>
+            <p>{{ mensaje_cuerpo }}</p>
+        </div>
+
+        <div class="botones-navegacion">
+            <a class="menu-boton" href="{{ url_for('historial', id_usuario=usuario.id) }}">📊 Ver Ranking</a>
+            <a class="menu-boton" href="{{ url_for('menu', id_usuario=usuario.id) }}">🏠 Volver al Menú</a>
+        </div>
+    </main>
+</body>
+</html>

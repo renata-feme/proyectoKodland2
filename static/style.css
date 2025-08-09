@@ -1,0 +1,186 @@
+@keyframes glowText {
+    0% { text-shadow: 0 0 10px #C4DAC5, 0 0 20px #81c784, 0 0 30px #66bb6a; }
+    100% { text-shadow: 0 0 20px #C4DAC5, 0 0 40px #a5d6a7, 0 0 60px #66bb6a; }
+}
+
+/* static/style.css */
+
+/*body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #C4DAC5;
+    color: #2e7d32;
+    transition: background 0.5s ease;
+    overflow-x: hidden;
+    overflow-y: auto;
+} */
+
+.fondo-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: -1;
+    background-color: black;
+}
+
+#video-fondo {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    filter: brightness(0.8);
+    pointer-events: none;
+    animation: slowZoom 900s linear infinite;
+}
+
+@keyframes slowZoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1); } /* sin zoom */
+}
+
+/*header {
+    background-color: #43a047;
+    color: #;
+    padding: 1.5em;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    background-image: url('https://img.icons8.com/emoji/48/deciduous-tree.png');
+    background-repeat: no-repeat;
+    background-position: right 1em center;
+    background-size: 48px;
+}*/
+
+h1 {
+    color: #FBFDFB;
+    animation: glowText 2s ease-in-out infinite alternate;
+    text-shadow: 0 0 10px #ffffff, 0 0 20px #81c784, 0 0 30px #66bb6a;
+}
+
+main {
+    max-width: 800px;
+    margin: 2em auto;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(34, 139, 34, 0.5);
+    animation: slideIn 1s ease-in-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(3px);
+}
+
+main:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 40px rgba(76, 175, 80, 0.6);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+label {
+    display: block;
+    margin: 1em 0 0.5em;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.7em;
+    margin-bottom: 1em;
+    border: 1px solid #a5d6a7;
+    border-radius: 5px;
+    background-color: #f1f8e9;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #66bb6a;
+    outline: none;
+    box-shadow: 0 0 15px #81c784;
+}
+
+button, input[type="submit"] {
+    background-color: #388e3c;
+    color: white;
+    border: none;
+    padding: 0.8em 1.5em;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #2e7d32;
+    transform: scale(1.07);
+    box-shadow: 0 0 20px #81c784;
+}
+
+a {
+    color: #1b5e20;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #388e3c;
+}
+
+ul {
+    padding-left: 1.5em;
+    list-style: square;
+    color: #388e3c;
+}
+
+body:hover {
+    background: #f1f8e9;
+}
+
+input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.opciones-reciclaje {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-top: 1.5em;
+    padding-left: 0.5em;
+}
+
+.opcion-reciclaje {
+    background-color: #f1f8e9;
+    border: 2px solid #c8e6c9;
+    border-radius: 10px;
+    padding: 1em;
+    font-weight: bold;
+    color: #2e7d32;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    text-align: left;
+    font-size: 1.1em;
+}
+
+.opcion-reciclaje:hover {
+    background-color: #dcedc8;
+    transform: scale(1.02);
+}
+
+.opcion-reciclaje.selected {
+    background-color: #a5d6a7;
+    border-color: #66bb6a;
+    color: #1b5e20;
+    box-shadow: 0 0 15px #81c784;
+}

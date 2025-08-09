@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clasificador de Residuos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .classifier-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5em;
+        }
+        .result-container {
+            display: flex;
+            gap: 2em;
+            align-items: center;
+            margin-top: 2em;
+            background-color: #f1f8e9;
+            padding: 2em;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .result-image {
+            max-width: 250px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .result-text h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Clasificador de Residuos</h1>
+    </header>
+
+    <main class="classifier-container">
+        <p>Sube una imagen de un residuo para saber cómo separarlo correctamente.</p>
+        
+        <!-- Formulario para subir la imagen -->
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" required>
+            <button type="submit" class="menu-boton">Clasificar</button>
+        </form>
+
+        <!-- Sección para mostrar el resultado -->
+        {% if prediction %}
+        <div class="result-container">
+            <img src="{{ url_for('static', filename='../uploads/' + prediction.image_path) }}" alt="Imagen subida" class="result-image">
+            <div class="result-text">
+                <h3>Resultado del Análisis:</h3>
+                <p style="font-size: 1.5em;">Clase: <b>{{ prediction.class_name }}</b></p>
+                <p>Confianza: <b>{{ prediction.confidence }}</b></p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div style="margin-top: 2em;">
+            <a class="menu-boton" href="{{ url_for('menu', id_usuario=usuario.id) }}">🏠 Volver al Menú</a>
+        </div>
+    </main>
+</body>
+</html>

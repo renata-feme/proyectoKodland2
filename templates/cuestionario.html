@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cuestionario de Huella de Carbono</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .question-section { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .question-section.active { display: block; }
+        .navigation-buttons { display: flex; justify-content: space-between; margin-top: 2em; }
+        /* Estilos para el mensaje de validación */
+        .validation-message {
+            padding: 1em; margin-bottom: 1em; border-radius: 5px; font-weight: bold;
+            background-color: #ffcdd2; color: #c62828; border: 1px solid #c62828;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header><h1>Cuestionario de Huella de Carbono</h1></header>
+    <main>
+        <!-- Div para mostrar los errores de validación -->
+        <div id="validation-message" class="validation-message" style="display: none;"></div>
+
+        <form id="carbon-form" method="post" action="{{ url_for('cuestionario', id_usuario=usuario.id) }}">
+            
+            <!-- Pregunta 1 -->
+            <div class="question-section active" id="pregunta-1">
+                <h2>🌿 Pregunta 1 de 8</h2>
+                <p>¿Cuántos litros de agua consumiste este mes? (Revisa tu recibo)</p>
+                <label for="agua">Litros</label>
+                <input type="number" name="agua" id="agua" min="0" value="{{ respuestas.get('agua', '') }}" required>
+            </div>
+
+            <!-- Pregunta 2 -->
+            <div class="question-section" id="pregunta-2">
+                <h2>⚡ Pregunta 2 de 8</h2>
+                <p>¿Cuántos kWh de electricidad consumiste este mes en tu hogar?</p>
+                <label for="luz">kWh</label>
+                <input type="number" name="luz" id="luz" min="0" value="{{ respuestas.get('luz', '') }}" required>
+            </div>
+
+            <!-- Pregunta 3 -->
+            <div class="question-section" id="pregunta-3">
+                <h2>⛽ Pregunta 3 de 8</h2>
+                <p>¿Cuántos litros de gasolina usaste este mes?</p>
+                <label for="gasolina">Litros</label>
+                <input type="number" name="gasolina" id="gasolina" min="0" step="0.1" value="{{ respuestas.get('gasolina', '') }}" required>
+            </div>
+            
+            <!-- Pregunta 4 -->
+            <div class="question-section" id="pregunta-4">
+                <h2>🚿 Pregunta 4 de 8</h2>
+                <p>¿Cuántos minutos, aproximadamente, dura tu ducha diaria?</p>
+                <label for="bano">Minutos</label>
+                <input type="number" id="bano" name="bano" min="0" value="{{ respuestas.get('bano', '') }}" required>
+            </div>
+
+            <!-- Pregunta 5 -->
+            <div class="question-section" id="pregunta-5">
+                <h2>💧 Pregunta 5 de 8</h2>
+                <p>¿Cuántos litros de agua embotellada consumes por semana, en promedio?</p>
+                <label for="aguaEmbot">Litros por semana</label>
+                <input type="number" id="aguaEmbot" name="aguaEmbot" min="0" value="{{ respuestas.get('aguaEmbot', '') }}" required>
+            </div>
+
+            <!-- Pregunta 6 -->
+            <div class="question-section" id="pregunta-6">
+                <h2>♻️ Pregunta 6 de 8</h2>
+                <p>¿Cuánto del total de tu basura separaste para reciclar este mes?</p>
+                <div class="opciones-reciclaje">
+                    <input type="radio" id="nada" name="reciclaje" value="0" {% if respuestas.get('reciclaje') == '0' %}checked{% endif %} required>
+                    <label for="nada" class="opcion-reciclaje">🚫 Nada</label>
+                    <input type="radio" id="poco" name="reciclaje" value="1" {% if respuestas.get('reciclaje') == '1' %}checked{% endif %}>
+                    <label for="poco" class="opcion-reciclaje">♻️ Poco (1–30%)</label>
+                    <input type="radio" id="algo" name="reciclaje" value="2" {% if respuestas.get('reciclaje') == '2' %}checked{% endif %}>
+                    <label for="algo" class="opcion-reciclaje">♻️ Algo (31–70%)</label>
+                    <input type="radio" id="mucho" name="reciclaje" value="3" {% if respuestas.get('reciclaje') == '3' %}checked{% endif %}>
+                    <label for="mucho" class="opcion-reciclaje">✅ Mucho (71–100%)</label>
+                </div>
+            </div>
+
+            <!-- Pregunta 7 -->
+            <div class="question-section" id="pregunta-7">
+                <h2>👕 Pregunta 7 de 8</h2>
+                <p>¿Cuántas prendas de ropa nueva compraste este mes?</p>
+                <label for="ropa">Prendas</label>
+                <input type="number" name="ropa" id="ropa" min="0" value="{{ respuestas.get('ropa', '') }}" required>
+            </div>
+
+            <!-- Pregunta 8 -->
+            <div class="question-section" id="pregunta-8">
+                <h2>🛒 Pregunta 8 de 8</h2>
+                <p>¿Con qué frecuencia compraste productos locales o a granel este mes?</p>
+                 <div class="opciones-reciclaje">
+                    <input type="radio" id="nunca" name="consumoLocal" value="0" {% if respuestas.get('consumoLocal') == '0' %}checked{% endif %} required>
+                    <label for="nunca" class="opcion-reciclaje">🚫 Nunca</label>
+                    <input type="radio" id="aveces" name="consumoLocal" value="1" {% if respuestas.get('consumoLocal') == '1' %}checked{% endif %}>
+                    <label for="aveces" class="opcion-reciclaje">🛍️ A veces</label>
+                    <input type="radio" id="siempre" name="consumoLocal" value="2" {% if respuestas.get('consumoLocal') == '2' %}checked{% endif %}>
+                    <label for="siempre" class="opcion-reciclaje">✅ Siempre</label>
+                </div>
+            </div>
+        </form>
+
+        <!-- Botonesss -->
+        <div class="navigation-buttons">
+            <button type="button" id="prev-btn" style="display: none;">Anterior</button>
+            <button type="button" id="next-btn">Siguiente</button>
+            <button type="submit" form="carbon-form" id="submit-btn" style="display: none;">Calcular Huella</button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('carbon-form');
+            const sections = Array.from(form.querySelectorAll('.question-section'));
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const validationDiv = document.getElementById('validation-message');
+            let currentSectionIndex = 0;
+
+            function showSection(index) {
+                sections.forEach((section, i) => {
+                    section.classList.toggle('active', i === index);
+                });
+                prevBtn.style.display = index > 0 ? 'inline-block' : 'none';
+                nextBtn.style.display = index < sections.length - 1 ? 'inline-block' : 'none';
+                submitBtn.style.display = index === sections.length - 1 ? 'inline-block' : 'none';
+            }
+
+            function showValidationMessage(message) {
+                validationDiv.textContent = message;
+                validationDiv.style.display = 'block';
+            }
+
+            function hideValidationMessage() {
+                validationDiv.style.display = 'none';
+            }
+
+            function validateCurrentSection() {
+                hideValidationMessage(); // Oculta mensajes anteriores
+                const currentSection = sections[currentSectionIndex];
+                const input = currentSection.querySelector('input[required]');
+                
+                if (!input) return true; // Si no hay input requerido se puede
+
+                if (input.type === 'radio') {
+                    const radioGroup = document.getElementsByName(input.name);
+                    if (!Array.from(radioGroup).some(r => r.checked)) {
+                        showValidationMessage('Por favor, selecciona una opción para continuar.');
+                        return false;
+                    }
+                } else if (!input.value.trim()) {
+                    showValidationMessage('Por favor, completa este campo para continuar.');
+                    input.focus();
+                    return false;
+                }
+                return true;
+            }
+
+            function saveAnswer(inputElement) {
+                if (!inputElement) return;
+                const pregunta = inputElement.name;
+                const respuesta = inputElement.type === 'radio'
+                    ? document.querySelector(`input[name="${pregunta}"]:checked`).value
+                    : inputElement.value;
+
+                if (respuesta === null || respuesta === '') return;
+
+                fetch("{{ url_for('guardar_respuesta') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pregunta: pregunta, respuesta: respuesta }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'ok') {
+                        console.log(`Respuesta para '${pregunta}' guardada.`);
+                    }
+                })
+                .catch(error => console.error('Error de red:', error));
+            }
+
+            nextBtn.addEventListener('click', function() {
+                if (validateCurrentSection()) {
+                    const input = sections[currentSectionIndex].querySelector('input[required]');
+                    saveAnswer(input);
+                    currentSectionIndex++;
+                    showSection(currentSectionIndex);
+                }
+            });
+
+            prevBtn.addEventListener('click', function() {
+                hideValidationMessage();
+                if (currentSectionIndex > 0) {
+                    currentSectionIndex--;
+                    showSection(currentSectionIndex);
+                }
+            });
+
+            submitBtn.addEventListener('click', function(event) {
+                if (!validateCurrentSection()) {
+                    event.preventDefault();
+                } else {
+                    const input = sections[currentSectionIndex].querySelector('input[required]');
+                    saveAnswer(input);
+                }
+            });
+
+            showSection(currentSectionIndex);
+        });
+    </script>
+</body>
+</html>

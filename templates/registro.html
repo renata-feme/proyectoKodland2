@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .flash { padding: 1em; margin-bottom: 1em; border-radius: 5px; font-weight: bold; text-align: center; }
+        .flash.error { background-color: #ffcdd2; color: #c62828; border: 1px solid #c62828; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Registro de Usuario</h1>
+    </header>
+
+    <main>
+        <!-- Para mostrar el mensaje de error si el usuario ya existe -->
+        {% if error %}
+            <div class="flash error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <label for="nombre">Nombre de usuario:</label>
+            <input type="text" id="nombre" name="nombre" required>
+
+            <label for="contrasena">Contraseña:</label>
+            <input type="password" id="contrasena" name="contrasena" required>
+
+            <input type="submit" value="Registrarse">
+        </form>
+
+        <p>¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión</a></p>
+    </main>
+</body>
+</html>

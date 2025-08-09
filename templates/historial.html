@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de Huella de Carbono</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+     
+        .historial-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5em; 
+        }
+        .historial-item {
+            background-color: #f1f8e9;
+            border-left: 5px solid #66bb6a;
+            padding: 1.5em;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .historial-item:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .historial-item h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        .historial-item p {
+            margin: 0.5em 0;
+        }
+        .puntaje-ranking {
+            font-size: 2em;
+            font-weight: bold;
+            color: #388e3c;
+        }
+        /* Estilos para la sección desplegable de detalles */
+        details {
+            margin-top: 1em;
+        }
+        details summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: #388e3c;
+        }
+        details ul {
+            list-style-type: none; 
+            padding-left: 0;
+            margin-top: 1em;
+            border-top: 1px solid #c8e6c9;
+            padding-top: 1em;
+        }
+        details li {
+            margin-bottom: 0.5em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Historial de {{ usuario.nombre }}</h1>
+    </header>
+
+    <main>
+        <h2>Ranking de tu Huella de Carbono</h2>
+        <p>Aquí puedes ver tus resultados, ordenados del mes con menor impacto (mejor) al de mayor impacto (peor).</p>
+        
+        <div class="historial-container">
+            {% if consumos %}
+                {% for consumo in consumos %}
+                    <div class="historial-item">
+                        <h3>Registro del: {{ consumo.fecha_creacion.strftime('%d de %B de %Y') }}</h3>
+                        <p><span class="puntaje-ranking">{{ consumo.puntaje }}</span> kg CO₂ eq.</p>
+                        <details>
+                            <summary>Ver detalles completos de este mes</summary>
+                            <ul>
+                            
+                                <li>💧 Consumo de Agua: <b>{{ consumo.agua }} L</b></li>
+                                <li>⚡ Consumo de Electricidad: <b>{{ consumo.luz }} kWh</b></li>
+                                <li>⛽ Consumo de Gasolina: <b>{{ consumo.gasolina }} L</b></li>
+                                <li>🚿 Ducha Diaria: <b>{{ consumo.bano }} min</b></li>
+                                <li>🥤 Agua Embotellada Semanal: <b>{{ consumo.aguaEmbot }} L</b></li>
+                                <li>👕 Ropa Nueva Comprada: <b>{{ consumo.ropa }} prendas</b></li>
+                                <li>
+                                    ♻️ Nivel de Reciclaje: 
+                                    <b>{% if consumo.reciclaje == 3 %}✅ Mucho (71–100%){% elif consumo.reciclaje == 2 %}♻️ Algo (31–70%){% elif consumo.reciclaje == 1 %}♻️ Poco (1–30%){% else %}🚫 Nada{% endif %}</b>
+                                </li>
+                                <li>
+                                    🛒 Consumo Local: 
+                                    <b>{% if consumo.consumoLocal == 2 %}✅ Siempre{% elif consumo.consumoLocal == 1 %}🛍️ A veces{% else %}🚫 Nunca{% endif %}</b>
+                                </li>
+                            </ul>
+                        </details>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Aún no has completado ningún cuestionario. ¡Anímate a calcular tu primera huella de carbono!</p>
+            {% endif %}
+        </div>
+
+        <div style="margin-top: 2em; text-align: center;">
+            <a class="menu-boton" href="{{ url_for('menu', id_usuario=usuario.id) }}">Volver al Menú</a>
+        </div>
+    </main>
+</body>
+</html>
