@@ -76,13 +76,13 @@
             const metadataURL = URL + "metadata.json";
             
             labelContainer = document.getElementById("label-container");
-            // CORRECCIÓN: Mostramos que el modelo se está cargando
+            // Mostramos que el modelo se está cargando
             labelContainer.innerHTML = "Cargando modelo...";
 
             model = await tmImage.load(modelURL, metadataURL);
             maxPredictions = model.getTotalClasses();
             
-            // CORRECCIÓN: Avisamos que el modelo ya está listo
+            // Avisamos que el modelo ya está listo
             labelContainer.innerHTML = "¡Modelo cargado!\n Sube una imagen.";
             
         }
