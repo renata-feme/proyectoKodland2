@@ -10,13 +10,13 @@ Live Green es una aplicación web diseñada para promover la conciencia ambienta
 
 ## ✨ Funcionalidades Principales
 
-Este proyecto se compone de tres módulos integrados:
+Este proyecto se compone de tres partes:
 
 1.  **👣 Calculadora de Huella de Carbono:** Mediante un cuestionario de 8 preguntas, la aplicación calcula el impacto ambiental mensual del usuario. Las preguntas abarcan hábitos de consumo clave (energía, agua, transporte, etc.) para generar un puntaje representativo. Un puntaje menor indica un menor impacto ambiental.
 
-2.  **🏆 Historial y Ranking:** Cada resultado del cuestionario es almacenado de forma persistente. La sección de "Historial" presenta estos registros en un formato de ranking, ordenados de menor a mayor puntaje, permitiendo al usuario visualizar su evolución y motivar la mejora continua.
+2.  **🏆 Historial y Ranking:** Cada resultado del cuestionario es almacenado. La sección de "Historial" presenta estos registros en un formato de ranking, ordenados de menor a mayor puntaje, permitiendo al usuario visualizar su evolución y motivar la mejora continua.
 
-3.  **📸 Clasificador de Residuos con IA:** ¿Dudas sobre cómo clasificar un residuo? Simplemente sube una fotografía. La aplicación utiliza un modelo de inteligencia artificial (entrenado con Teachable Machine) que analiza la imagen e identifica el tipo de residuo para facilitar su correcta separación.
+3.  **📸 Clasificador de Residuos con IA:** Si tienes dudas sobre cómo clasificar un residuo, simplemente sube una fotografía. La aplicación utiliza un modelo de inteligencia artificial (entrenado con Teachable Machine) que analiza la imagen e identifica el tipo de residuo para facilitar su correcta separación.
 
 ---
 
@@ -99,4 +99,5 @@ Para ejecutar este proyecto de forma local (creemos), siga los siguientes pasos 
     Un usuario tiene un residuo y duda sobre su correcta disposición. Accede a la herramienta "Clasificar Residuo", sube una fotografía del objeto y el sistema de IA le informa la categoría a la que pertenece, resolviendo la duda.
 
 
-* **ESPERAMOS SEA DE SU AGRADO :) , atte. Alonso & Renata**
+## ESPERAMOS SEA DE SU AGRADO :) , atte. Alonso & Renata
+
