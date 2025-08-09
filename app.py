@@ -16,7 +16,7 @@ app.config['SECRET_KEY'] = 'una-llave-secreta-muy-dificil-de-adivinar' # seed pa
 # se prioriza la obtención de claves api desde variables de entorno para seguridad (best practice).
 # el segundo argumento de os.getenv es un valor por defecto (fallback) que se usa si la variable de entorno no existe.
 NEWS_API_KEY = os.getenv('NEWS_API_KEY', '39bb1eb41e584d4b9c7b696a45c8ebad')
-GNEWS_API_KEY = os.getenv('GNEWS_API_KEY') # api de respaldo, opcional. no tiene fallback, si no existe, es none.
+# GNEWS_API_KEY = os.getenv('GNEWS_API_KEY') # api de respaldo, opcional. si no existe, es none
 
 # lista blanca de dominios para filtrar resultados de newsapi.
 DOMINIOS_CONFIABLES = ",".join([
@@ -71,21 +71,9 @@ def _normaliza_articulos_newsapi(articles):
         })
     return lista_limpia
 
-def _normaliza_articulos_gnews(articles):
-    """adapta la respuesta de gnews al mismo esquema de datos uniforme."""
-    lista_limpia = []
-    for articulo in articles:
-        if not articulo.get('title') or not articulo.get('url'):
-            continue
-        lista_limpia.append({
-            "title": articulo.get('title'),
-            "description": articulo.get('description'),
-            "url": articulo.get('url'),
-            "urlToImage": articulo.get('image'), # gnews usa 'image' en lugar de 'urltoimage'
-            "source": (articulo.get('source') or {}).get('name'),
-            "publishedAt": articulo.get('publishedAt')
-        })
-    return lista_limpia
+
+# gnews
+
 
 def fetch_noticias():
     """orquesta la obtención, filtrado y normalización de noticias."""
@@ -104,10 +92,10 @@ def fetch_noticias():
                 "q": "(reciclaje OR residuos OR \"economía circular\" OR sostenible OR sustentable OR \"medio ambiente\" OR \"cambio climático\")",
                 "language": "es",
                 "sortBy": "publishedAt", # ordena por fecha de publicación.
-                "pageSize": 30, # pedimos más artículos de los necesarios para tener margen en el filtrado.
-                "domains": DOMINIOS_CONFIABLES # filtramos por nuestra lista de fuentes confiables.
+                "pageSize": 30, # pedimos más artículos de los necesarios para tener margen en el filtrado
+                "domains": DOMINIOS_CONFIABLES # filtramos por nuestra lista de fuentes confiable
             }
-            # la api key se envía en los headers por seguridad, como especifica la documentación de newsapi.
+            # la api key se envía en los headers por seguridad, como especifica la documentación de newsapi
             headers = {"X-Api-Key": NEWS_API_KEY}
             
             # se ejecuta la petición get a la api con un timeout para no dejar colgada la app.
@@ -143,51 +131,27 @@ def fetch_noticias():
             break
 
     # estrategia de respaldo (fallback): gnews
-    # se activa solo si la estrategia principal no arrojó suficientes resultados.
-    if len(filtradas) < 6 and GNEWS_API_KEY:
-        print("[noticias] newsapi no fue suficiente, intentando con gnews...")
-        try:
-            url = "https://gnews.io/api/v4/search"
-            params = {
-                "q": "reciclaje OR \"economía circular\" OR sostenible OR sustentable OR \"medio ambiente\" OR \"cambio climático\"",
-                "lang": "es",
-                "sortby": "publishedAt",
-                "max": 30,
-                "token": GNEWS_API_KEY
-            }
-            respuesta = requests.get(url, params=params, timeout=8)
-            if respuesta.status_code == 200:
-                datos = respuesta.json()
-                candidatos_gnews = _normaliza_articulos_gnews(datos.get("articles", []))
-                # se repite el proceso de filtrado y deduplicado para completar la lista.
-                for articulo in candidatos_gnews:
-                    if len(filtradas) == 6: break
-                    if not _pasa_filtro_verde(articulo): continue
-                    clave = (articulo.get("title","").strip().lower())
-                    if not clave or clave in vistos: continue
-                    vistos.add(clave)
-                    filtradas.append(articulo)
-            else:
-                print(f"[gnews] error {respuesta.status_code}: {respuesta.text[:200]}")
-        except requests.RequestException as e:
-            print(f"[gnews] hubo un problema de conexión: {e}")
+    # se activa solo si la principal no arroja suficientes resultados. ---> cambiado
+    
 
     # se retorna un slice de la lista para asegurar que nunca se envíen más del límite de artículos.
     return filtradas[:6]
 
 
-# enrutamiento de la aplicación
+# rutaaas
 
-@app.route("/menu/<int:id_usuario>")
+@app.route("/menu/<int:id_usuario>")  #pasamos el usuario de una página a otra
 def menu(id_usuario):
     usuario = Usuario.query.get_or_404(id_usuario)
     noticias = fetch_noticias()
     return render_template("menu.html", usuario=usuario, noticias=noticias)
 
-@app.route("/registro", methods=["GET", "POST"])
+# id_usuario : número recibido desde la URL
+
+@app.route("/registro", methods=["GET", "POST"])  #methods, decorador de FLASK: dice qué tipo de solicitud acepta la url
 def registro():
     if request.method == "POST":
-        nombre = request.form["nombre"]
+        nombre = request.form["nombre"]  #request.form[]: guarda los datos enviados de un formulario (tipo diccionario, busca la key, debe coincidir con lo que esté en name)
         contrasena = request.form["contrasena"]
         if Usuario.query.filter_by(nombre=nombre).first():
             error_msg = "el nombre de usuario ya existe. por favor, elige otro."
@@ -198,7 +162,7 @@ def registro():
         return redirect(url_for("login", registered='true'))
     return render_template("registro.html")
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])   #decorador de FLASK: lit dice qué hacer (o mostrar) cuando se está en esa url
 def login():
     success_msg = None
     if request.args.get('registered') == 'true':
@@ -206,7 +170,7 @@ def login():
     if request.method == "POST":
         nombre = request.form["nombre"]
         contrasena = request.form["contrasena"]
-        usuario = Usuario.query.filter_by(nombre=nombre, contrasena=contrasena).first()
+        usuario = Usuario.query.filter_by(nombre=nombre, contrasena=contrasena).first()  #.query : sistema de consultas
         if usuario:
             session['user_id'] = usuario.id
             return redirect(url_for("menu", id_usuario=usuario.id))
